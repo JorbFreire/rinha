@@ -1,3 +1,3 @@
 import * as wasm from "rinha";
 
-wasm.display();
+wasm.load_json();

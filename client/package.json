@@ -8,7 +8,11 @@
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "start": "webpack-dev-server"
+    "dev": "webpack-dev-server",
+    "clear": "if [ -d 'node_modules' ]; then rm -r node_modules; fi;",
+    "reload-modules": "yarn clear && yarn",
+    "wasm-build": "wasm-pack build",
+    "wasm": "yarn wasm-build && yarn reload-modules && echo 'WASM package reloaded'"
   },
   "repository": {
     "type": "git",
