@@ -33,30 +33,31 @@ pub fn render_new_row(row_name: &str) -> Result<(), JsValue> {
 
 #[wasm_bindgen]
 pub fn load_json() {
-    log("mais ue???");
     fn check_is_iterable(object_to_check: &Value) -> bool {
         let is_object = object_to_check.is_object();
         let is_array = object_to_check.is_array();
-        if is_object {
-            log("is_object");
-        }
-        if is_array {
-            log("is_array");
-        }
-        let is = is_object || is_array;
-        return is;
+        return is_object || is_array;
     }
 
     // recursive function that shall load the full JSON file
     let read_iterable_object = fix_fn!(
         |read_iterable_object, iterable_object: &Value| -> bool {
             log("ok, we are reading something at least");
-            if check_is_iterable(iterable_object) {
+            if iterable_object.is_array() {
                 for value in iterable_object.as_array().unwrap().iter() {
                     log("ja foi 1");
-                    log(value.as_str().unwrap());
+                    render_new_row(value.as_str().unwrap());
                     if check_is_iterable(value) {
                         log("iterate again");
+                        read_iterable_object(value);
+                    }
+                }
+            }
+            if iterable_object.is_object() {
+                for (key, value) in iterable_object.as_object().unwrap().iter() {
+                    render_new_row(value.as_str().unwrap());
+                    render_new_row(key);
+                    if check_is_iterable(value) {
                         read_iterable_object(value);
                     }
                 }
@@ -65,15 +66,15 @@ pub fn load_json() {
         }
     );
 
-    let phones = json!([
-        "+44 1234564",
-        "+44 1234565",
-        "+44 1234563",
-        "+44 1234562",
-        "+44 1234561",
-        "+44 1234567",
-        "+44 2345678"
-    ]);
+    let phones = json!({
+        "4": "+44 1234564",
+        "5": "+44 1234565",
+        "3": "+44 1234563",
+        "2": "+44 1234562",
+        "1": "+44 1234561",
+        "7": "+44 1234567",
+        "8": "+44 2345678"
+    });
 
     read_iterable_object(&phones);
 }
