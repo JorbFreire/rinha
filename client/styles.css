@@ -1,0 +1,51 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+}
+
+button {
+  font-family: 'Roboto', sans-serif;
+}
+
+h3 {
+  font-weight: 400;
+  font-size: 18px;
+}
+
+#container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  gap: 32px;
+}
+
+#submit-button {
+  background-color: #bed2fe;
+  padding: 8px 16px;
+
+  border-radius: 8px;
+  border: none;
+
+  font-size: 20px;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#error-message {
+  color: #f44336;
+  font-style: italic;
+  font-size: 16px;
+  font-weight: 400;
+  margin-top: -24px;
+}

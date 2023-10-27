@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Hello wasm-pack!</title>
-  </head>
-  <body>
-    <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
-    <script src="./bootstrap.js"></script>
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <title>Hello wasm-pack!</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
+  <script src="./bootstrap.js"></script>
+  <div id="container">
+    <h1>JSON Tree Viewer</h1>
+    <h3>Simple JSON viewer that runs completely on-client. No data exchange</h3>
+    <button id="submit-button">
+      Load JSON
+    </button>
+    <p id="error-message">
+      Invalid file. Please load a valid JSON file
+    </p>
+  </div>
+</body>
+
 </html>
