@@ -37,10 +37,33 @@ pub fn generate_new_row(row_name: &str) -> Result<Element, JsValue> {
     // todo: end "todo"
     let new_collapsible_row = document.create_element("details")?;
     let row_summary = document.create_element("summary")?;
+    let _ = row_summary.set_text_content(Some(row_name));
     let _ = new_collapsible_row.append_child(&row_summary);
-    let _ = new_collapsible_row.set_text_content(Some(row_name));
 
     Ok(new_collapsible_row)
+}
+
+#[wasm_bindgen]
+pub fn generate_nameless_row() -> Result<Element, JsValue> {
+    // todo: shall be refactored into a class
+    let window: Window = web_sys::window().expect("no global `window` exists");
+    let document: Document = window.document().expect("should have a document on window");
+    // todo: end "todo"
+    let new_div = document.create_element("div")?;
+
+    Ok(new_div)
+}
+
+#[wasm_bindgen]
+pub fn generate_new_item(item_name: &str) -> Result<Element, JsValue> {
+    // todo: shall be refactored into a class
+    let window: Window = web_sys::window().expect("no global `window` exists");
+    let document: Document = window.document().expect("should have a document on window");
+    // todo: end "todo"
+    let new_item = document.create_element("p")?;
+    let _ = new_item.set_text_content(Some(item_name));
+
+    Ok(new_item)
 }
 
 #[wasm_bindgen]
@@ -54,36 +77,37 @@ pub fn load_json() {
     // recursive function that shall load the full JSON file
     let read_iterable_object = fix_fn!(
         |read_iterable_object, iterable_object: &Value| -> Result<Element, JsValue> {
-            let mut row: Element = generate_new_row("temp_row").ok().unwrap();
+            let mut this_row: Element = generate_new_row("temp_row").ok().unwrap();
 
             if iterable_object.is_array() {
+                this_row = generate_new_row("array").ok().unwrap();
                 for value in iterable_object.as_array().unwrap().iter() {
-                    row = generate_new_row(value.as_str().unwrap()).ok().unwrap();
                     if check_is_iterable(value) {
                         let array_row = read_iterable_object(value).ok().unwrap();
-                        let _ = row.append_child(&array_row);
+                        let _ = this_row.append_child(&array_row);
                     } else {
-                        let array_row_item = generate_new_row("array").ok();
+                        let array_row_item = generate_new_item(value.as_str().unwrap()).ok();
                         let array_row_item_unwraped = array_row_item.as_deref().unwrap();
-                        let _ = row.append_child(&array_row_item_unwraped);
+                        let _ = this_row.append_child(&array_row_item_unwraped);
                     }
                 }
             }
             if iterable_object.is_object() {
+                this_row = generate_nameless_row().ok().unwrap();
                 for (key, value) in iterable_object.as_object().unwrap().iter() {
-                    row = generate_new_row(key).ok().unwrap();
+                    let sub_row = generate_new_row(key).ok().unwrap();
                     if check_is_iterable(value) {
                         let object_row = read_iterable_object(value).ok().unwrap();
-                        let _ = row.append_child(&object_row);
+                        let _ = this_row.append_child(&object_row);
                     } else {
-                        let object_row_item = generate_new_row(value.as_str().unwrap()).ok();
+                        let object_row_item = generate_new_item(value.as_str().unwrap()).ok();
                         let object_row_item_unwarped = object_row_item.as_deref().unwrap();
-                        let _ = row.append_child(&object_row_item_unwarped);
+                        let _ = sub_row.append_child(&object_row_item_unwarped);
                     }
+                    let _ = this_row.append_child(&sub_row);
                 }
             }
-            // ! Just need to learn how "Ok()" and it's failure case works
-            Ok(row)
+            Ok(this_row)
         }
     );
 
@@ -98,5 +122,5 @@ pub fn load_json() {
     });
 
     let r = read_iterable_object(&phones);
-    let _ = render_new_row(&r.ok().unwrap());
+    let _ = render_new_row(&r.as_ref().ok().unwrap());
 }

@@ -22,7 +22,14 @@ serde_json = "1.0.107"
 fix_fn = "1.0.2"
 [dependencies.web-sys]
 version = "0.3.4"
-features = ['Document', 'Element', 'HtmlElement', 'Node', 'Window']
+features = [
+  'Document',
+  'Element',
+  'HtmlElement',
+  'HtmlCollection',
+  'Node',
+  'Window',
+]
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.34"
