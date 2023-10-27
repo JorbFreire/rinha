@@ -17,9 +17,12 @@
   <div id="container">
     <h1>JSON Tree Viewer</h1>
     <h3>Simple JSON viewer that runs completely on-client. No data exchange</h3>
-    <button id="submit-button">
-      Load JSON
-    </button>
+    <label id="submit-file">
+      <span>
+        Load JSON
+      </span>
+      <input onChange="loadJson" type="file" accept=".json" />
+    </label>
     <p id="error-message">
       Invalid file. Please load a valid JSON file
     </p>

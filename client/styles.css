@@ -29,10 +29,9 @@ h3 {
   gap: 32px;
 }
 
-#submit-button {
-  background-color: #bed2fe;
+#submit-file {
   padding: 8px 16px;
-
+  background-color: #bed2fe;
   border-radius: 8px;
   border: none;
 
@@ -40,6 +39,15 @@ h3 {
   letter-spacing: 0.05em;
   font-weight: 700;
   cursor: pointer;
+}
+
+#submit-file input {
+  display: none;
+  cursor: pointer;
+}
+
+#submit-file input::file-selector-button {
+  display: none;
 }
 
 #error-message {
