@@ -1,3 +1,11 @@
+// todo 
+// ?[] - test with bigger json, from drive files
+// ?[] - json input on html
+// ?[] - minimal css
+// ?[] - acessilibity improvement
+// ?[] - performance improvement
+// ?[] - Refactor "window", "document", "body" into a class or something
+
 mod utils;
 
 use wasm_bindgen::prelude::*;
