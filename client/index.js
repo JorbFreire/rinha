@@ -1,3 +1,8 @@
 import * as wasm from "rinha";
 
-wasm.load_json();
+export function loadJson() {
+  const container = document.querySelector("#container");
+  container.remove();
+  wasm.load_json();
+}
+

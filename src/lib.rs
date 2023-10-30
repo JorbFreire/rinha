@@ -4,15 +4,15 @@
 // ?[] - minimal css
 // ?[] - acessilibity improvement
 // ?[] - performance improvement
-// ?[] - Refactor "window", "document", "body" into a class or something
 
 mod utils;
+pub mod browser;
 
 use wasm_bindgen::prelude::*;
 use serde_json::Value;
 use serde_json::json;
 use fix_fn::fix_fn;
-use web_sys::{Element, Window, Document, HtmlElement};
+use web_sys::{Element};
 
 #[wasm_bindgen]
 extern "C" {
@@ -27,22 +27,16 @@ pub fn greet() {
 }
 
 #[wasm_bindgen]
-pub fn render_new_row(row: &Element) -> Result<(), JsValue> {
-    // todo: shall be refactored into a class
-    let window: Window = web_sys::window().expect("no global `window` exists");
-    let document: Document = window.document().expect("should have a document on window");
-    let body: HtmlElement = document.body().expect("document should have a body");
-    // todo: end "todo"
-    let _ = body.append_child(&row);
+pub fn render_element(element: &Element) -> Result<(), JsValue> {
+    let body = browser::browser::Browser::new().body;
+    let _ = body.append_child(&element);
     Ok(())
 }
 
 #[wasm_bindgen]
 pub fn generate_new_row(row_name: &str) -> Result<Element, JsValue> {
-    // todo: shall be refactored into a class
-    let window: Window = web_sys::window().expect("no global `window` exists");
-    let document: Document = window.document().expect("should have a document on window");
-    // todo: end "todo"
+    let document = browser::browser::Browser::new().document;
+
     let new_collapsible_row = document.create_element("details")?;
     let row_summary = document.create_element("summary")?;
     let _ = row_summary.set_text_content(Some(row_name));
@@ -53,10 +47,8 @@ pub fn generate_new_row(row_name: &str) -> Result<Element, JsValue> {
 
 #[wasm_bindgen]
 pub fn generate_nameless_row() -> Result<Element, JsValue> {
-    // todo: shall be refactored into a class
-    let window: Window = web_sys::window().expect("no global `window` exists");
-    let document: Document = window.document().expect("should have a document on window");
-    // todo: end "todo"
+    let document = browser::browser::Browser::new().document;
+
     let new_div = document.create_element("div")?;
 
     Ok(new_div)
@@ -64,10 +56,8 @@ pub fn generate_nameless_row() -> Result<Element, JsValue> {
 
 #[wasm_bindgen]
 pub fn generate_new_item(item_name: &str) -> Result<Element, JsValue> {
-    // todo: shall be refactored into a class
-    let window: Window = web_sys::window().expect("no global `window` exists");
-    let document: Document = window.document().expect("should have a document on window");
-    // todo: end "todo"
+    let document = browser::browser::Browser::new().document;
+
     let new_item = document.create_element("p")?;
     let _ = new_item.set_text_content(Some(item_name));
 
@@ -129,6 +119,9 @@ pub fn load_json() {
         "8": "+44 2345678"
     });
 
-    let r = read_iterable_object(&phones);
-    let _ = render_new_row(&r.as_ref().ok().unwrap());
+    let json_result = read_iterable_object(&phones);
+    let json_result_as_html = json_result.as_ref().ok().unwrap();
+    json_result_as_html.set_id("container");
+
+    let _ = render_element(&json_result_as_html);
 }
