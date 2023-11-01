@@ -10,9 +10,10 @@ pub mod browser;
 
 use wasm_bindgen::prelude::*;
 use serde_json::Value;
-use serde_json::json;
+use serde_json::from_str;
 use fix_fn::fix_fn;
-use web_sys::{Element};
+use web_sys::{Element, File};
+use wasm_bindgen_futures;
 
 #[wasm_bindgen]
 extern "C" {
@@ -64,8 +65,9 @@ pub fn generate_new_item(item_name: &str) -> Result<Element, JsValue> {
     Ok(new_item)
 }
 
+
 #[wasm_bindgen]
-pub fn load_json() {
+pub async fn load_json(file: &File) {
     fn check_is_iterable(object_to_check: &Value) -> bool {
         let is_object = object_to_check.is_object();
         let is_array = object_to_check.is_array();
@@ -109,17 +111,34 @@ pub fn load_json() {
         }
     );
 
-    let phones = json!({
-        "4": "+44 1234564",
-        "5": "+44 1234565",
-        "3": "+44 1234563",
-        "2": "+44 1234562",
-        "1": "+44 1234561",
-        "7": "+44 1234567",
-        "8": "+44 2345678"
-    });
+    async fn read_json_input(file_to_read: &File) -> Result<Value, JsValue> {
+        log("start de reader function");
+        let promise = file_to_read.text();
+        let okthen = wasm_bindgen_futures::JsFuture::from(promise).await;
+        let file_as_string = &okthen.ok().unwrap().as_string().unwrap();
+        log("finish");
 
-    let json_result = read_iterable_object(&phones);
+        let file_as_json: Value = from_str(&file_as_string).unwrap();
+        Ok(file_as_json)
+    }
+
+    let file_type = file.type_();
+    if &file_type != "application/json" {
+        log("should trown an error!");
+    }
+
+    let file_name = file.name();
+    let file_size = file.size().to_string();
+    // let promise = js_sys::Promise::resolve(&42.into());
+
+    let file_as_json = read_json_input(&file).await;
+
+    log("&file_name");
+    log(&file_name);
+    log("&file_size");
+    log(&file_size);
+
+    let json_result = read_iterable_object(&file_as_json.ok().unwrap());
     let json_result_as_html = json_result.as_ref().ok().unwrap();
     json_result_as_html.set_id("container");
 
